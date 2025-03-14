@@ -7,32 +7,21 @@ namespace Entity
 {
     public class Table : MonoBehaviour
     {
-        public const int MAX_CAPACITY = 10;
+        public const int MAX_CAPACITY = 15;
         public const float INTERACTION_TIME = 0.15F;
         
         public int numberOfFruits;
         
-        private Stack<int> fruits = new Stack<int>(MAX_CAPACITY);
+        private Stack<IFruit> fruits = new Stack<IFruit>(MAX_CAPACITY);
 
-        public bool TransferTo(int fruit)
-        {
-            if (fruits.Count < MAX_CAPACITY)
-            {
-                fruits.Push(fruit);
-                return true;
-            }
-            
-            return false;
-        }
-
-        public int GetFrom()
+        public IFruit GetFrom()
         {
             if (fruits.Count > 0)
             {
                 return fruits.Pop();
             }
 
-            return -1;
+            return null;
         }
 
         private void Update()
@@ -61,7 +50,10 @@ namespace Entity
             interactionCounter -= Time.deltaTime;
             if (interactionCounter <= 0f && fruits.Count < MAX_CAPACITY && character.CanGive())
             {
-                fruits.Push(character.RemoveFruits());
+                var fruit = character.RemoveFruits();
+                var index = fruits.Count;
+                fruit.MoveTo(transform, GetFruitLocalPosition(index));
+                fruits.Push(fruit);
                 interactionCounter = INTERACTION_TIME;
             }
         }
@@ -70,6 +62,13 @@ namespace Entity
         {
             interactionCounter = INTERACTION_TIME;
             character = null;
+        }
+
+        public static Vector3 GetFruitLocalPosition(int index)
+        {
+            var row = index % 5;
+            var column = index / 5;
+            return new Vector3(-0.9f + row * .45f, 0.3f + column * 0.3f, -0.6f + column * 0.6f);
         }
     }
 }

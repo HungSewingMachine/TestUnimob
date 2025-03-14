@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Interface;
 using UnityEngine;
 
@@ -10,8 +11,6 @@ namespace Entity
         public float acceleration = 10f; // How fast it reaches target speed
         public float deceleration = 15f; // How fast it slows down
         public float rotationSpeed = 10f; // Rotation smoothing speed
-
-        [SerializeField] private int counter = 0;
         
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Joystick joystick;
@@ -23,6 +22,7 @@ namespace Entity
     
         private static readonly int IsMoving = Animator.StringToHash("IsMove");
         private static readonly int IsEmpty = Animator.StringToHash("IsEmpty");
+        private static readonly int IsCarryMove = Animator.StringToHash("IsCarryMove");
 
         private void Start()
         {
@@ -47,19 +47,19 @@ namespace Entity
                 velocity.z = Mathf.Lerp(velocity.z, 0, deceleration * Time.deltaTime);
             }
         
+            velocity.y -= 9.8f * Time.deltaTime;
+            characterController.Move(velocity * Time.deltaTime); 
+            
             animator.SetBool(IsMoving, isMoving);
-            characterController.Move(velocity * Time.deltaTime);
+            var isEmpty = fruits.Count <= 0;
+            animator.SetBool(IsEmpty, isEmpty);
+            animator.SetBool(IsCarryMove, isMoving && !isEmpty);
         
             // Rotate character towards movement direction
             if (isMoving)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
                 modelTransform.rotation = Quaternion.Slerp(modelTransform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                counter = 0;
             }
         }
     
@@ -78,18 +78,23 @@ namespace Entity
             return forward * input.y + right * input.x;
         }
 
-        public bool CanGive() => counter > 0;
+        private Stack<IFruit> fruits = new Stack<IFruit>();
         
-        public bool CanCarry() => counter < 5;
+        public bool CanGive() => fruits.Count > 0;
+        
+        public bool CanCarry() => fruits.Count < 5;
 
-        public void TakeFruits()
+        public void TakeFruits(IFruit fruit)
         {
-            counter += 1;
+            var index = fruits.Count;
+            var localPosition = new Vector3(0, 0.8f + index * 0.3f, 0.5f);
+            fruits.Push(fruit);
+            fruit.MoveTo(transform, localPosition);
         }
 
-        public int RemoveFruits()
+        public IFruit RemoveFruits()
         {
-            return counter -= 1;
+            return fruits.Pop();
         }
     }
 }

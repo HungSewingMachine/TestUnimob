@@ -11,11 +11,22 @@ namespace Entity
         public const float INTERACTION_TIME = 0.15F;
         public const float GENERATE_TIME = 2F;
         
-        private Queue<int> fruits = new Queue<int>();
+        private static readonly int IsGrowing = Animator.StringToHash("IsGrowing");
+        private readonly Vector3[] spawnPoints = new Vector3[MAX_FRUIT]
+        {
+            new Vector3(0.35f, 1.12f, 0.12f),
+            new Vector3(-0.46f, 1.4f, -0.26f),
+            new Vector3(-0.6f, 0.9f, 0.3f),
+        };
+
+        [SerializeField] private Transform myTransform;
+        [SerializeField] private Tomato tomatoPrefab;
+        [SerializeField] private Animator animator;
+        
+        private Queue<Tomato> fruits = new Queue<Tomato>();
         public float generateTimer;
         public float interactionCounter;
         
-        public int numberOfFruits;
         // Start is called before the first frame update
         private void Start()
         {
@@ -28,22 +39,20 @@ namespace Entity
         }
 
         // gen fruit
-        // simulate on trigger stay!
         private void Update()
         {
-            GenerateFruits();
-
-            numberOfFruits = fruits.Count;
+            CheckGenerateFruits();
         }
 
-        private void GenerateFruits()
+        private void CheckGenerateFruits()
         {
-            if (fruits.Count < MAX_FRUIT)
+            var canGenerateFruit = fruits.Count < MAX_FRUIT;
+            if (canGenerateFruit)
             {
                 generateTimer -= Time.deltaTime;
                 if (generateTimer <= 0f)
                 {
-                    fruits.Enqueue(1);
+                    GenerateFruit();
                     generateTimer = GENERATE_TIME;
                 }
             }
@@ -51,6 +60,15 @@ namespace Entity
             {
                 ResetTimer();
             }
+
+            animator.SetBool(IsGrowing, canGenerateFruit);
+        }
+
+        private void GenerateFruit()
+        {
+            var positionIndex = fruits.Count % MAX_FRUIT;
+            var tomato = Instantiate(tomatoPrefab, myTransform.position + spawnPoints[positionIndex], Quaternion.identity, myTransform);
+            fruits.Enqueue(tomato);
         }
 
         private ICharacter character;
@@ -68,8 +86,8 @@ namespace Entity
             interactionCounter -= Time.deltaTime;
             if (interactionCounter <= 0f && fruits.Count > 0 && character.CanCarry())
             {
-                fruits.Dequeue();
-                character.TakeFruits();
+                var fruit = fruits.Dequeue();
+                character.TakeFruits(fruit);
                 interactionCounter = INTERACTION_TIME;
             }
         }
