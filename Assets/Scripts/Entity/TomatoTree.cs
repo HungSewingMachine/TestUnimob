@@ -5,14 +5,15 @@ using UnityEngine;
 
 namespace Entity
 {
-    public class Tree : MonoBehaviour, IInteractable
+    public class TomatoTree : MonoBehaviour
     {
         public const int MAX_FRUIT = 3;
-
+        public const float INTERACTION_TIME = 0.15F;
         public const float GENERATE_TIME = 2F;
         
         private Queue<int> fruits = new Queue<int>();
         public float generateTimer;
+        public float interactionCounter;
         
         public int numberOfFruits;
         // Start is called before the first frame update
@@ -30,6 +31,13 @@ namespace Entity
         // simulate on trigger stay!
         private void Update()
         {
+            GenerateFruits();
+
+            numberOfFruits = fruits.Count;
+        }
+
+        private void GenerateFruits()
+        {
             if (fruits.Count < MAX_FRUIT)
             {
                 generateTimer -= Time.deltaTime;
@@ -43,20 +51,33 @@ namespace Entity
             {
                 ResetTimer();
             }
-            
-            numberOfFruits = fruits.Count;
         }
 
-        public bool Interact()
+        private ICharacter character;
+        
+        private void OnTriggerStay(Collider other)
         {
-            if (fruits.Count > 0)
+            if (!other.CompareTag("Player")) return;
+            
+            if (character == null)
             {
-                fruits.Dequeue();
-                print("lose 1 fruit!");
-                return true;
+                character = other.GetComponent<ICharacter>();
+                if (character == null) return;
             }
             
-            return false;
+            interactionCounter -= Time.deltaTime;
+            if (interactionCounter <= 0f && fruits.Count > 0 && character.CanCarry())
+            {
+                fruits.Dequeue();
+                character.TakeFruits();
+                interactionCounter = INTERACTION_TIME;
+            }
+        }
+        
+        private void OnTriggerExit(Collider other)
+        {
+            interactionCounter = INTERACTION_TIME;
+            character = null;
         }
     }
 }

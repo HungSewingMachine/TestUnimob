@@ -4,10 +4,8 @@ using UnityEngine;
 
 namespace Entity
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, ICharacter
     {
-        public const float INTERACTION_TIME = 0.15F;
-        
         public float moveSpeed = 5f; // Movement Speed
         public float acceleration = 10f; // How fast it reaches target speed
         public float deceleration = 15f; // How fast it slows down
@@ -22,7 +20,6 @@ namespace Entity
         [SerializeField] private Animator animator;
     
         private Vector3 velocity;
-        private float interactionCounter;
     
         private static readonly int IsMoving = Animator.StringToHash("IsMove");
         private static readonly int IsEmpty = Animator.StringToHash("IsEmpty");
@@ -81,36 +78,18 @@ namespace Entity
             return forward * input.y + right * input.x;
         }
 
-        private IInteractable specialObject;
+        public bool CanGive() => counter > 0;
         
-        private void OnTriggerStay(Collider other)
-        {
-            if (counter == 5) return;
+        public bool CanCarry() => counter < 5;
 
-            if (!other.CompareTag("Tree")) return;
-            
-            if (specialObject == null)
-            {
-                specialObject = other.GetComponent<IInteractable>();
-                print($"Find object success: {specialObject != null}");
-                if (specialObject == null) return;
-            }
-            
-            interactionCounter -= Time.deltaTime;
-            if (interactionCounter <= 0f)
-            {
-                if (specialObject.Interact())
-                {
-                    counter += 1;
-                }
-                interactionCounter = INTERACTION_TIME;
-            }
+        public void TakeFruits()
+        {
+            counter += 1;
         }
 
-        private void OnTriggerExit(Collider other)
+        public int RemoveFruits()
         {
-            interactionCounter = INTERACTION_TIME;
-            specialObject = null;
+            return counter -= 1;
         }
     }
 }
