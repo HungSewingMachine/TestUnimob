@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Interface
 {
-    public interface IFruit
+    public interface ITranfer
     {
         void MoveTo(Transform parent, Vector3 position);
     }
