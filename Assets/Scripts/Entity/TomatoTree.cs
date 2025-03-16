@@ -64,15 +64,18 @@ namespace Entity
             animator.SetBool(IsGrowing, canGenerateFruit);
         }
 
+
+        private int counter = 0;
         private void GenerateFruit()
         {
-            var positionIndex = fruits.Count % MAX_FRUIT;
+            var positionIndex = counter % MAX_FRUIT;
             var groundPosition = myTransform.position + spawnPoints[positionIndex] + Vector3.down;
             var tomato = Instantiate(tomatoPrefab, groundPosition, Quaternion.identity, myTransform);
             tomato.MoveTo(myTransform, spawnPoints[positionIndex], onComplete: () =>
             {
                 fruits.Enqueue(tomato);
             });
+            counter++;
         }
 
         private ICharacter character;
