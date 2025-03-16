@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b116fa1b94f70a4f8a13bec32dc284a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameConfig: {fileID: 11400000, guid: b64a6e50145ba1d44ade1e4494e3cc6c, type: 2}
   myTransform: {fileID: 7184818688836648104}
   tomatoPrefab: {fileID: 6255152689317137277, guid: cde04d0c23b06cc44bb8ea3b895a57a1, type: 3}
   animator: {fileID: 1816418803524036731}

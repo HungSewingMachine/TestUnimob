@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35a036b5e64a45d7b89fa9fa6dcaae4d, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  tomatoTreeGrowTime: 0.2
+  tomatoTreeGrowTime: 1
   tomatoMoveTime: 0.5
   boxScaleTime: 0.3
