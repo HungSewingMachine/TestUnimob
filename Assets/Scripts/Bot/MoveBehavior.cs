@@ -33,13 +33,11 @@ public class MoveBehavior : FSMC_Behaviour
         if (distance.magnitude < 0.5f)
         {
             executer.SetTrigger("WaitForFruit");
-            Debug.Log("WaitForFruit");
         }
     }
 
     public override void OnStateExit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
-        Debug.Log("RegisterClient");
         fruitTable.RegisterClient(bot);
     }
 }

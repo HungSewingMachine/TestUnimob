@@ -10,8 +10,8 @@ namespace Entity
         
         public void MoveTo(Transform parent, Vector3 position, bool destroyedAtEnd = false)
         {
-            cashTransform.SetParent(parent);
-            var tween = cashTransform.DOLocalMove(position, 0.2f);
+            //cashTransform.SetParent(parent);
+            var tween = cashTransform.DOMove(parent.position + position, 0.2f);
             if (destroyedAtEnd)
             {
                 tween.OnComplete(DestroyGameObject);

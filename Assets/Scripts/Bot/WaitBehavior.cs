@@ -2,6 +2,7 @@ using UnityEngine;
 using FSMC.Runtime;
 using System;
 using Entity;
+using Object = UnityEngine.Object;
 
 [Serializable]
 public class WaitBehavior : FSMC_Behaviour
@@ -19,16 +20,14 @@ public class WaitBehavior : FSMC_Behaviour
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
-        // check if stack full or not, full -> run to 0,0,0
         if (bot.IsFull)
         {
-            
+            executer.SetTrigger("ToQueue");
         }
     }
 
     public override void OnStateExit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
         bot.UnregisterTable();
-        bot.SetTarget(new Vector3(-10, 0, 0));
     }
 }

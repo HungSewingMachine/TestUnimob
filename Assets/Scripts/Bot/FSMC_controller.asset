@@ -17,14 +17,16 @@ MonoBehaviour:
   States:
   - rid: 1743710317781712928
   - rid: 1743710317781712930
-  - rid: 1743710317781712935
   - rid: 1743710337931673600
+  - rid: 1743710357219442693
   AnyTransitions: []
   StartingState:
-    rid: 1743710337931673600
+    rid: 1743710317781712928
   Parameters:
   - rid: 1743710317781712932
   - rid: 1743710317781712937
+  - rid: 1743710357219442689
+  - rid: 1743710357219442695
   references:
     version: 2
     RefIds:
@@ -47,10 +49,10 @@ MonoBehaviour:
       data:
         _behaviours:
         - rid: 1743710317781712934
-        Position: {x: 585, y: 352}
+        Position: {x: 586, y: 346}
         _name: WaitFruit
         TransitionsFrom:
-        - rid: 1743710317781712936
+        - rid: 1743710357219442688
         TransitionsTo:
         - rid: 1743710317781712931
     - rid: 1743710317781712931
@@ -81,54 +83,81 @@ MonoBehaviour:
       type: {class: WaitBehavior, ns: , asm: Assembly-CSharp}
       data:
         enabled: 1
-    - rid: 1743710317781712935
-      type: {class: FSMC_State, ns: FSMC.Runtime, asm: FSMC.Runtime}
-      data:
-        _behaviours:
-        - rid: 1743710317781712939
-        Position: {x: 363, y: 476}
-        _name: MoveThenDestroy
-        TransitionsFrom: []
-        TransitionsTo:
-        - rid: 1743710317781712936
-    - rid: 1743710317781712936
-      type: {class: FSMC_Transition, ns: FSMC.Runtime, asm: FSMC.Runtime}
-      data:
-        conditions:
-        - conditions:
-          - rid: 1743710317781712938
-        _originState:
-          rid: 1743710317781712930
-        _destinationState:
-          rid: 1743710317781712935
-        _name: WaitFruit->MoveThenDestroy
     - rid: 1743710317781712937
       type: {class: FSMC_BoolParameter, ns: FSMC.Runtime, asm: FSMC.Runtime}
       data:
         _type: 3
         _name: IsFinish
         _value: 0
-    - rid: 1743710317781712938
-      type: {class: FSMC_BoolCondition, ns: FSMC.Runtime, asm: FSMC.Runtime}
-      data:
-        comparison: 0
-        parameter:
-          rid: 1743710317781712937
-        Value: 1
-    - rid: 1743710317781712939
-      type: {class: FinishBehavior, ns: , asm: Assembly-CSharp}
-      data:
-        enabled: 1
     - rid: 1743710337931673600
       type: {class: FSMC_State, ns: FSMC.Runtime, asm: FSMC.Runtime}
       data:
         _behaviours:
         - rid: 1743710337931673601
-        Position: {x: 483, y: 7}
+        Position: {x: 512, y: 495}
         _name: GoToQueue
-        TransitionsFrom: []
-        TransitionsTo: []
+        TransitionsFrom:
+        - rid: 1743710357219442694
+        TransitionsTo:
+        - rid: 1743710357219442688
     - rid: 1743710337931673601
       type: {class: GoToQueueBehavior, ns: , asm: Assembly-CSharp}
       data:
         enabled: 1
+    - rid: 1743710357219442688
+      type: {class: FSMC_Transition, ns: FSMC.Runtime, asm: FSMC.Runtime}
+      data:
+        conditions:
+        - conditions:
+          - rid: 1743710357219442690
+        _originState:
+          rid: 1743710317781712930
+        _destinationState:
+          rid: 1743710337931673600
+        _name: WaitFruit->GoToQueue
+    - rid: 1743710357219442689
+      type: {class: FSMC_BoolParameter, ns: FSMC.Runtime, asm: FSMC.Runtime}
+      data:
+        _type: 3
+        _name: HasPay
+        _value: 0
+    - rid: 1743710357219442690
+      type: {class: FSMC_BoolCondition, ns: FSMC.Runtime, asm: FSMC.Runtime}
+      data:
+        comparison: 0
+        parameter:
+          rid: 1743710357219442689
+        Value: 1
+    - rid: 1743710357219442693
+      type: {class: FSMC_State, ns: FSMC.Runtime, asm: FSMC.Runtime}
+      data:
+        _behaviours: []
+        Position: {x: 295.58203, y: 652.3793}
+        _name: GoOut
+        TransitionsFrom: []
+        TransitionsTo:
+        - rid: 1743710357219442694
+    - rid: 1743710357219442694
+      type: {class: FSMC_Transition, ns: FSMC.Runtime, asm: FSMC.Runtime}
+      data:
+        conditions:
+        - conditions:
+          - rid: 1743710357219442697
+        _originState:
+          rid: 1743710337931673600
+        _destinationState:
+          rid: 1743710357219442693
+        _name: GoToQueue->GoOut
+    - rid: 1743710357219442695
+      type: {class: FSMC_BoolParameter, ns: FSMC.Runtime, asm: FSMC.Runtime}
+      data:
+        _type: 3
+        _name: Trigger
+        _value: 0
+    - rid: 1743710357219442697
+      type: {class: FSMC_BoolCondition, ns: FSMC.Runtime, asm: FSMC.Runtime}
+      data:
+        comparison: 0
+        parameter:
+          rid: 1743710357219442689
+        Value: 1

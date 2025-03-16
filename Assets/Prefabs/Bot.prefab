@@ -840,7 +840,8 @@ MonoBehaviour:
   animator: {fileID: 4038326093781871321}
   numberOfCash: 0
   <TargetPosition>k__BackingField: {x: 0, y: 0, z: 0}
-  cashPrefab: {fileID: 0}
+  capacity: 0
+  cashPrefab: {fileID: 4766692383668683904, guid: 641de12569bc53145b07ccabdafe9d46, type: 3}
 --- !u!1 &6024680700184512540
 GameObject:
   m_ObjectHideFlags: 0

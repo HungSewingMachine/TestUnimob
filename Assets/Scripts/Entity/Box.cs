@@ -24,7 +24,7 @@ namespace Entity
             return fruitPositions[index];
         }
 
-        private void Init()
+        public void Init()
         {
             myTransform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBounce);
         }

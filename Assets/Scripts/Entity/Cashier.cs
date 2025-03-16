@@ -1,21 +1,32 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Interface;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Entity
 {
+    public enum CashierState
+    {
+        ProcessQueue,
+        Processing,
+    }
+    
     public class Cashier : InteractBase
     {
+        [SerializeField] private CashierState state;
         [SerializeField] private Transform myTransform;
         
         private Queue<BotController> objectQueue = new Queue<BotController>();
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.A))
+            if (!hasPlayer) return;
+            if (state == CashierState.ProcessQueue)
             {
-                ProcessQueue();
+                state = CashierState.Processing;
+                ProcessQueue().Forget();
             }
         }
 
@@ -23,22 +34,56 @@ namespace Entity
         {
             var positionIndex = objectQueue.Count;
             botController.SetTarget(GetQueuePosition(positionIndex));
+
+            if (objectQueue.Count == 0)
+            {
+                SpawnBox();
+            }
             objectQueue.Enqueue(botController);
+        }
+
+        private void SpawnBox()
+        {
+            currentBox = Instantiate(boxPrefab);
+            currentBox.Init();
         }
 
         private Vector3 GetQueuePosition(int index)
         {
             return myTransform.position + new Vector3(index * 1.5f, 0, 1);
         }
-        
-        void ProcessQueue()
+
+        private bool hasPlayer = false;
+        private void OnTriggerEnter(Collider other)
         {
-            if (objectQueue.Count == 0) return;
+            if (!other.CompareTag("Player")) return;
+            state = CashierState.ProcessQueue;
+            hasPlayer = true;
+        }
 
-            var bot = objectQueue.Dequeue(); // Lấy phần tử đầu tiên (O(1))
+        private void OnTriggerExit(Collider other)
+        {
+            if (!other.CompareTag("Player")) return;
 
-            bot.SetTarget(Vector3.zero);
+            hasPlayer = false;
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private async UniTaskVoid ProcessQueue()
+        {
+            if (objectQueue.Count == 0)
+            {
+                await UniTask.DelayFrame(1);
+                state = CashierState.ProcessQueue;
+                return;
+            }
+
+            var bot = objectQueue.Dequeue();
+            
+            await bot.FillBoxThenGiveCash(currentBox);
+            
             int index = 0;
             foreach (var obj in objectQueue)
             {
@@ -46,10 +91,18 @@ namespace Entity
                 obj.SetTarget(pos);
                 index++;
             }
+
+            var isBotRemain = objectQueue.Count != 0;
+            if (isBotRemain)
+            {
+                SpawnBox();
+            }
+
+            state = CashierState.ProcessQueue;
         }
 
         [SerializeField] private Box boxPrefab;
-        private Box wrapBox;
+        private Box currentBox;
 
         private Stack<Cash> cashes = new Stack<Cash>();
         

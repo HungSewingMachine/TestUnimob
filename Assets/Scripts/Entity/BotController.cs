@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Entity
 {
@@ -8,7 +9,7 @@ namespace Entity
         
         private Table fruitTable;
         private int positionIndex;
-        private int capacity;
+        [SerializeField] private int capacity;
 
         protected override Vector3 ProcessInput()
         {
@@ -51,7 +52,7 @@ namespace Entity
         /// </summary>
         public void UnregisterTable()
         {
-            fruitTable.ReleasePosition(positionIndex);
+            fruitTable.ReleasePosition(positionIndex, this);
         }
 
         public void SetTarget(Vector3 position)
@@ -60,15 +61,44 @@ namespace Entity
         }
 
         [SerializeField] private Cash cashPrefab;
-        
-        public void GiveCash(int numberOfFruit, Cashier cashier)
+
+        private async UniTask GiveCash()
         {
-            for (int i = 0; i < numberOfFruit * 3; i++)
+            var cashier = FindObjectOfType<Cashier>();
+            
+            for (int i = 0; i < 12; i++)
             {
                 var cash = Instantiate(cashPrefab, modelTransform.position, Quaternion.identity);
                 cash.MoveTo(cashier.transform, cashier.GetCashPosition(i));
                 cashier.StoreCash(cash);
+                await UniTask.Delay(100);
             }
+
+            HasPay = true;
+        }
+        
+        [field : SerializeField] public bool HasPay {get; private set;}
+        
+        public async UniTask FillBoxThenGiveCash(Box box)
+        {
+            if (fruits.Count == 0) return;
+            
+            var boxTransform = box.transform;
+            var counter = 0;
+            while (fruits.Count > 0)
+            {
+                var f = fruits.Pop();
+                f.MoveTo(boxTransform, box.GetFruitPosition(counter));
+                counter++;
+            }
+            
+            box.PlayAnimation();
+            await UniTask.Delay(1000);
+            var localPosition = new Vector3(0, 0.8f, 1f);
+            box.MoveTo(modelTransform, localPosition);
+            hasBox = true;
+            
+            await GiveCash();
         }
     }
 }

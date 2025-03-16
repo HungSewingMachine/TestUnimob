@@ -74,9 +74,13 @@ namespace Entity
             return Vector3.zero; 
         }
 
-        public void ReleasePosition(int index)
+        public void ReleasePosition(int index, ICharacter c)
         {
             occupied[index] = false; 
+            if (waitClients.Contains(c))
+            {
+                waitClients.Remove(c);
+            }
         }
 
         private float waitCounter = 0f;
