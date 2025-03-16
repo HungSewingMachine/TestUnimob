@@ -365,6 +365,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &355499711
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 355499712}
+  m_Layer: 6
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &355499712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355499711}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1142607193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &459708527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -413,9 +444,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5638666443818370357, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 963194228}
     - target: {fileID: 5757023786812896718, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
       propertyPath: m_Name
       value: Bot (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5757023786812896718, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5829549177734468065, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: rotationSpeed
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1395,6 +1438,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2454542794986075327, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 963194227}
+    - target: {fileID: 5638666443818370357, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 963194228}
     - target: {fileID: 5757023786812896718, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
       propertyPath: m_Name
       value: Bot
@@ -1452,9 +1503,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5638666443818370357, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 963194228}
     - target: {fileID: 5757023786812896718, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
       propertyPath: m_Name
       value: Bot (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5757023786812896718, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5829549177734468065, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: rotationSpeed
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1509,9 +1572,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5638666443818370357, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 963194228}
     - target: {fileID: 5757023786812896718, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
       propertyPath: m_Name
       value: Bot (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5757023786812896718, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5829549177734468065, guid: 62a741bd3c2e38f4a8c3de8126fcbb06, type: 3}
+      propertyPath: rotationSpeed
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1766,6 +1841,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6806764403334894796, guid: 3b7fe7296c78e484d914205213b9cfa9, type: 3}
+      propertyPath: icon
+      value: 
+      objectReference: {fileID: 355499712}
+    - target: {fileID: 6806764403334894796, guid: 3b7fe7296c78e484d914205213b9cfa9, type: 3}
       propertyPath: joystick
       value: 
       objectReference: {fileID: 2078047632}
@@ -1787,7 +1866,10 @@ PrefabInstance:
       objectReference: {fileID: 963194228}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 515080712462175510, guid: 3b7fe7296c78e484d914205213b9cfa9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 355499712}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b7fe7296c78e484d914205213b9cfa9, type: 3}
 --- !u!1660057539 &9223372036854775807

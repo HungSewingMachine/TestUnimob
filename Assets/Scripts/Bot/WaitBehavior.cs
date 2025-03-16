@@ -8,6 +8,7 @@ using Object = UnityEngine.Object;
 public class WaitBehavior : FSMC_Behaviour
 {
     private BotController bot;
+    private BotStateDisplayer displayer;
     
     public override void StateInit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
@@ -16,6 +17,8 @@ public class WaitBehavior : FSMC_Behaviour
     public override void OnStateEnter(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
         bot = executer.GetComponent<BotController>();
+        displayer = executer.GetComponent<BotStateDisplayer>();
+        bot.OnFruitChanged += displayer.DisplayText;
     }
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
@@ -28,6 +31,7 @@ public class WaitBehavior : FSMC_Behaviour
 
     public override void OnStateExit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
+        bot.OnFruitChanged -= displayer.DisplayText;
         bot.UnregisterTable();
     }
 }

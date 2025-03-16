@@ -22,7 +22,7 @@ namespace Entity
             return ConvertJoystickToWorldDirection(joystickInput);
         }
 
-        protected override int MaxCapacity()
+        public override int MaxCapacity()
         {
             return 5;
         }

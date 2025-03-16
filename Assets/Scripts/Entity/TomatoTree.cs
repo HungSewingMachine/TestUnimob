@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Data;
 using Interface;
 using UnityEngine;
 
@@ -9,7 +10,6 @@ namespace Entity
     {
         public const int MAX_FRUIT = 3;
         public const float INTERACTION_TIME = 0.15F;
-        public const float GENERATE_TIME = 2F;
         
         private static readonly int IsGrowing = Animator.StringToHash("IsGrowing");
         private readonly Vector3[] spawnPoints = new Vector3[MAX_FRUIT]
@@ -19,6 +19,7 @@ namespace Entity
             new Vector3(-0.6f, 0.9f, 0.3f),
         };
 
+        [SerializeField] private GameConfig gameConfig;
         [SerializeField] private Transform myTransform;
         [SerializeField] private Tomato tomatoPrefab;
         [SerializeField] private Animator animator;
@@ -35,7 +36,7 @@ namespace Entity
 
         private void ResetTimer()
         {
-            generateTimer = GENERATE_TIME;
+            generateTimer = gameConfig.tomatoTreeGrowTime;
         }
 
         // gen fruit
@@ -53,7 +54,7 @@ namespace Entity
                 if (generateTimer <= 0f)
                 {
                     GenerateFruit();
-                    generateTimer = GENERATE_TIME;
+                    generateTimer = gameConfig.tomatoTreeGrowTime;
                 }
             }
             else

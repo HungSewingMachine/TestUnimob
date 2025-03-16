@@ -11,6 +11,7 @@ public class MoveBehavior : FSMC_Behaviour
     private Transform myTransform;
     private Table fruitTable;
     private BotController bot;
+    private BotStateDisplayer displayer;
 
     public override void StateInit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
@@ -26,6 +27,10 @@ public class MoveBehavior : FSMC_Behaviour
         
         bot.Respawn();
         bot.RegisterTablePosition(fruitTable);
+        
+        displayer = executer.GetComponent<BotStateDisplayer>();
+        displayer.ShowText();
+        displayer.DisplayText(0, bot.MaxCapacity());
     }
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
@@ -39,6 +44,7 @@ public class MoveBehavior : FSMC_Behaviour
 
     public override void OnStateExit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
+        bot.OnFruitChanged -= displayer.DisplayText;
         fruitTable.RegisterClient(bot);
     }
 }

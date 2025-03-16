@@ -39,7 +39,7 @@ namespace Entity
             return Vector3.zero;
         }
 
-        protected override int MaxCapacity()
+        public override int MaxCapacity()
         {
             return capacity;
         }

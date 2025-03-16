@@ -21,6 +21,9 @@ public class GoToQueueBehavior : FSMC_Behaviour
         var cashier = Object.FindObjectOfType<Cashier>();
         
         cashier.Enqueue(bot);
+        
+        var displayer = executer.GetComponent<BotStateDisplayer>();
+        displayer.ShowCashier();
     }
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)

@@ -24,7 +24,7 @@ namespace Entity
         private static readonly int IsMoving = Animator.StringToHash("IsMove");
         private static readonly int IsEmpty = Animator.StringToHash("IsEmpty");
         private static readonly int IsCarryMove = Animator.StringToHash("IsCarryMove");
-
+        
          protected virtual void Start()
         {
             animator.SetBool(IsEmpty, true);
@@ -71,7 +71,7 @@ namespace Entity
 
         protected abstract Vector3 ProcessInput();
 
-        protected abstract int MaxCapacity();
+        public abstract int MaxCapacity();
 
         protected Stack<ITransfer> fruits = new Stack<ITransfer>();
         
@@ -86,12 +86,17 @@ namespace Entity
             var index = fruits.Count;
             var localPosition = new Vector3(0, 0.8f + index * 0.3f, 0.5f);
             fruits.Push(transfer);
+            OnFruitChanged?.Invoke(fruits.Count, MaxCapacity());
             transfer.MoveTo(modelTransform, localPosition);
         }
 
         public ITransfer RemoveFruits()
         {
-            return fruits.Pop();
+            var fruit = fruits.Pop();
+            OnFruitChanged?.Invoke(fruits.Count, MaxCapacity());
+            return fruit;
         }
+
+        public event System.Action<int, int> OnFruitChanged;
     }
 }

@@ -17,6 +17,8 @@ public class FinishBehavior : FSMC_Behaviour
     {
         bot = executer.GetComponent<BotController>();
         myTransform = executer.transform;
+        var displayer = executer.GetComponent<BotStateDisplayer>();
+        displayer.ShowEmoji();
     }
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)

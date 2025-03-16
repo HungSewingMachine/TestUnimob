@@ -15,6 +15,7 @@ namespace Entity
         
         public float interactionCounter;
         private ICharacter character;
+        private int numberOfFruits;
         
         private void OnTriggerStay(Collider other)
         {
@@ -31,9 +32,10 @@ namespace Entity
             {
                 var fruit = character.RemoveFruits();
                 var index = fruits.Count;
+                fruits.Push(fruit);
                 fruit.MoveTo(transform, GetFruitLocalPosition(index), onComplete: () =>
                 {
-                    fruits.Push(fruit);
+                    numberOfFruits++;
                 });
                 interactionCounter = INTERACTION_TIME;
             }
@@ -108,12 +110,13 @@ namespace Entity
 
         private void GiveCustomerFruits()
         {
-            while (fruits.Count > 0 && waitClients.Count > 0)
+            while (numberOfFruits > 0 && waitClients.Count > 0)
             {
                 ICharacter c = waitClients.Dequeue();
                 if (!c.CanCarry()) continue;
                     
                 var fruit = fruits.Pop();
+                numberOfFruits--;
                 c.TakeFruits(fruit);
                 if (c.CanCarry())
                 {
