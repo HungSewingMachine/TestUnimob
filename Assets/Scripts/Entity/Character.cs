@@ -19,6 +19,7 @@ namespace Entity
         [SerializeField] private Animator animator;
     
         private Vector3 velocity;
+        protected bool hasBox = false;
     
         private static readonly int IsMoving = Animator.StringToHash("IsMove");
         private static readonly int IsEmpty = Animator.StringToHash("IsEmpty");
@@ -49,7 +50,7 @@ namespace Entity
             characterController.Move(velocity * Time.deltaTime); 
             
             animator.SetBool(IsMoving, isMoving);
-            var isEmpty = fruits.Count <= 0;
+            var isEmpty = fruits.Count <= 0 && !hasBox;
             animator.SetBool(IsEmpty, isEmpty);
             animator.SetBool(IsCarryMove, isMoving && !isEmpty);
         
@@ -65,7 +66,7 @@ namespace Entity
 
         protected abstract int MaxCapacity();
 
-        private Stack<IFruit> fruits = new Stack<IFruit>();
+        protected Stack<ITransfer> fruits = new Stack<ITransfer>();
         
         public bool IsFull => fruits.Count == MaxCapacity();
         
@@ -73,17 +74,25 @@ namespace Entity
         
         public bool CanCarry() => fruits.Count < MaxCapacity();
 
-        public void TakeFruits(IFruit fruit)
+        public void TakeFruits(ITransfer transfer)
         {
             var index = fruits.Count;
             var localPosition = new Vector3(0, 0.8f + index * 0.3f, 0.5f);
-            fruits.Push(fruit);
-            fruit.MoveTo(transform, localPosition);
+            fruits.Push(transfer);
+            transfer.MoveTo(modelTransform, localPosition);
         }
 
-        public IFruit RemoveFruits()
+        public ITransfer RemoveFruits()
         {
             return fruits.Pop();
+        }
+
+        [SerializeField] protected int numberOfCash;
+        
+        public void TakeCash(ITransfer transfer)
+        {
+            transfer.MoveTo(modelTransform, new Vector3(0, 0.5f, 0), true);
+            numberOfCash++;
         }
     }
 }

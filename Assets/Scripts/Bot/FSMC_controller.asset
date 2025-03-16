@@ -18,9 +18,10 @@ MonoBehaviour:
   - rid: 1743710317781712928
   - rid: 1743710317781712930
   - rid: 1743710317781712935
+  - rid: 1743710337931673600
   AnyTransitions: []
   StartingState:
-    rid: 1743710317781712928
+    rid: 1743710337931673600
   Parameters:
   - rid: 1743710317781712932
   - rid: 1743710317781712937
@@ -116,5 +117,18 @@ MonoBehaviour:
         Value: 1
     - rid: 1743710317781712939
       type: {class: FinishBehavior, ns: , asm: Assembly-CSharp}
+      data:
+        enabled: 1
+    - rid: 1743710337931673600
+      type: {class: FSMC_State, ns: FSMC.Runtime, asm: FSMC.Runtime}
+      data:
+        _behaviours:
+        - rid: 1743710337931673601
+        Position: {x: 483, y: 7}
+        _name: GoToQueue
+        TransitionsFrom: []
+        TransitionsTo: []
+    - rid: 1743710337931673601
+      type: {class: GoToQueueBehavior, ns: , asm: Assembly-CSharp}
       data:
         enabled: 1

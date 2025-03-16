@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Interface;
 using UnityEngine;
@@ -12,7 +11,7 @@ namespace Entity
         public const int MAX_CAPACITY = 15;
         public const float INTERACTION_TIME = 0.15F;
         
-        private Stack<IFruit> fruits = new Stack<IFruit>(MAX_CAPACITY);
+        private Stack<ITransfer> fruits = new Stack<ITransfer>(MAX_CAPACITY);
         
         public float interactionCounter;
         private ICharacter character;

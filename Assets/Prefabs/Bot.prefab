@@ -757,7 +757,7 @@ GameObject:
   - component: {fileID: 2532612452022550196}
   - component: {fileID: 845360027708540717}
   - component: {fileID: 5829549177734468065}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -838,8 +838,9 @@ MonoBehaviour:
   modelTransform: {fileID: 2249559665116588982}
   characterController: {fileID: 2532612452022550196}
   animator: {fileID: 4038326093781871321}
-  targetPosition: {x: 0, y: 0, z: 0}
-  fruitTable: {fileID: 0}
+  numberOfCash: 0
+  <TargetPosition>k__BackingField: {x: 0, y: 0, z: 0}
+  cashPrefab: {fileID: 0}
 --- !u!1 &6024680700184512540
 GameObject:
   m_ObjectHideFlags: 0

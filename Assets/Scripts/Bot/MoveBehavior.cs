@@ -29,7 +29,7 @@ public class MoveBehavior : FSMC_Behaviour
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
-        var distance = myTransform.position - bot.targetPosition;
+        var distance = myTransform.position - bot.TargetPosition;
         if (distance.magnitude < 0.5f)
         {
             executer.SetTrigger("WaitForFruit");

@@ -4,7 +4,7 @@ namespace Entity
 {
     public class BotController : Character
     {
-        public Vector3 targetPosition;
+        [field : SerializeField] public Vector3 TargetPosition { get; private set; }
         
         private Table fruitTable;
         private int positionIndex;
@@ -12,7 +12,7 @@ namespace Entity
 
         protected override Vector3 ProcessInput()
         {
-            var dir = targetPosition - modelTransform.position;
+            var dir = TargetPosition - modelTransform.position;
             if (dir.magnitude > 0.5f)
             {
                 return dir.normalized;
@@ -39,7 +39,9 @@ namespace Entity
         /// <param name="table"></param>
         public void RegisterTable(Table table)
         {
-            targetPosition = table.GetPosition(out var idx);
+            var pos = table.GetPosition(out var idx);
+            SetTarget(pos);
+            
             fruitTable = table;
             positionIndex = idx;
         }
@@ -50,6 +52,23 @@ namespace Entity
         public void UnregisterTable()
         {
             fruitTable.ReleasePosition(positionIndex);
+        }
+
+        public void SetTarget(Vector3 position)
+        {
+            TargetPosition = position;
+        }
+
+        [SerializeField] private Cash cashPrefab;
+        
+        public void GiveCash(int numberOfFruit, Cashier cashier)
+        {
+            for (int i = 0; i < numberOfFruit * 3; i++)
+            {
+                var cash = Instantiate(cashPrefab, modelTransform.position, Quaternion.identity);
+                cash.MoveTo(cashier.transform, cashier.GetCashPosition(i));
+                cashier.StoreCash(cash);
+            }
         }
     }
 }

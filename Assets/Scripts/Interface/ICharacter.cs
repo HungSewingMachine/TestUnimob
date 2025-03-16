@@ -6,8 +6,10 @@
         
         bool CanCarry();
         
-        void TakeFruits(IFruit fruit);
+        void TakeFruits(ITransfer transfer);
         
-        IFruit RemoveFruits();
+        ITransfer RemoveFruits();
+        
+        void TakeCash(ITransfer transfer);
     }
 }
