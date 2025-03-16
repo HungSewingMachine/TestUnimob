@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using FSMC.Runtime;
 using System;
 using Entity;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class MoveBehavior : FSMC_Behaviour
@@ -20,7 +19,8 @@ public class MoveBehavior : FSMC_Behaviour
 
     public override void OnStateEnter(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
-        fruitTable = Object.FindObjectOfType<Table>();
+        var tables = Object.FindObjectsOfType<Table>();
+        fruitTable = tables[Random.Range(0, tables.Length)];
         bot = executer.GetComponent<BotController>();
         myTransform = executer.transform;
         

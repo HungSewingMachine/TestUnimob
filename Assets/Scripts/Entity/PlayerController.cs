@@ -1,15 +1,21 @@
-using System;
-using Cysharp.Threading.Tasks;
-using NaughtyAttributes;
+using Data;
+using Interface;
 using UnityEngine;
 
 namespace Entity
 {
-    public class PlayerController : Character
+    public class PlayerController : Character, IBuyer
     {
         [SerializeField] private Joystick joystick;
         [SerializeField] private Transform cameraTransform;
-        
+
+        protected override void Start()
+        {
+            base.Start();
+
+            playerData.numberOfCash = 0;
+        }
+
         protected override Vector3 ProcessInput()
         {
             var joystickInput = joystick.Direction;
@@ -36,14 +42,22 @@ namespace Entity
             return forward * input.y + right * input.x;
         }
 
-        public void CollectMoney()
+        public bool CanBuy()
         {
-            
+            return playerData.numberOfCash > 0;
         }
+
+        [SerializeField] protected PlayerData playerData;
         
-        public void SpendMoney()
+        public void TakeCash(ITransfer transfer)
         {
-            
+            transfer.MoveTo(modelTransform, new Vector3(0, 0.5f, 0), true);
+            playerData.AddMoney(1);
+        }
+
+        public void SpendCash()
+        {
+            playerData.AddMoney(-1);;
         }
     }
 }

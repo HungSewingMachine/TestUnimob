@@ -93,13 +93,5 @@ namespace Entity
         {
             return fruits.Pop();
         }
-
-        [SerializeField] protected int numberOfCash;
-        
-        public void TakeCash(ITransfer transfer)
-        {
-            transfer.MoveTo(modelTransform, new Vector3(0, 0.5f, 0), true);
-            numberOfCash++;
-        }
     }
 }

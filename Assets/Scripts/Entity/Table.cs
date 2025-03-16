@@ -16,6 +16,8 @@ namespace Entity
         public float interactionCounter;
         private ICharacter character;
         
+        public int NumberOfFruits => fruits.Count;
+        
         private void OnTriggerStay(Collider other)
         {
             if (!other.CompareTag("Player")) return;

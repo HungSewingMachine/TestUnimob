@@ -3,13 +3,15 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Entity
 {
     public class BotController : Character
     {
-        [SerializeField] private Renderer renderer;
+        [FormerlySerializedAs("renderer")] 
+        [SerializeField] private Renderer botRenderer;
         [SerializeField] private Material[] materials;
         
         [field : SerializeField] public Vector3 TargetPosition { get; private set; }
@@ -150,11 +152,13 @@ namespace Entity
 
         private void DestroyBox()
         {
-            if (hasBox)
+            if (currentBox != null)
             {
                 Destroy(currentBox.gameObject);
-                hasBox = false;
             }
+            
+            hasBox = false;
+            HasPay = false;
         }
     }
 }

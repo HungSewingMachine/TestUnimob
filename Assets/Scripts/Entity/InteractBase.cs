@@ -6,7 +6,7 @@ namespace Entity
     public abstract class InteractBase : MonoBehaviour
     {
         public float interactionCounter;
-        protected ICharacter character;
+        protected IBuyer character;
 
         protected abstract float GetCooldownTime();
         
@@ -20,7 +20,7 @@ namespace Entity
             
             if (character == null)
             {
-                character = other.GetComponent<ICharacter>();
+                character = other.GetComponent<IBuyer>();
                 if (character == null) return;
             }
 

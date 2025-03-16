@@ -9,7 +9,5 @@
         void TakeFruits(ITransfer transfer);
         
         ITransfer RemoveFruits();
-        
-        void TakeCash(ITransfer transfer);
     }
 }
