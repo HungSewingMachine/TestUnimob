@@ -20,7 +20,7 @@ public class GoToQueueBehavior : FSMC_Behaviour
         bot = executer.GetComponent<BotController>();
         var cashier = Object.FindObjectOfType<Cashier>();
         
-        cashier.Enqueue(bot);
+        cashier.AddCustomerToQueue(bot);
         
         var displayer = executer.GetComponent<BotStateDisplayer>();
         displayer.ShowCashier();

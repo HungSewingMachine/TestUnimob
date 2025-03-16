@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -21,6 +20,10 @@ namespace Entity
         private int positionIndex;
         [SerializeField] private int capacity;
 
+        /// <summary>
+        /// Handle input for bot, position, rotation
+        /// </summary>
+        /// <returns></returns>
         protected override Vector3 ProcessInput()
         {
             var dir = TargetPosition - modelTransform.position;
@@ -50,11 +53,31 @@ namespace Entity
             Initialize();
         }
 
-        public void Initialize()
+        private CancellationTokenSource cts;
+        private void Initialize()
         {
             cts = new CancellationTokenSource();
         }
+        
+        /// <summary>
+        /// Clean up
+        /// </summary>
+        private void OnDestroy()
+        {
+            CheckAndDestroyMat();
+            
+            var director = GetComponent<PlayableDirector>();
+            if (director != null)
+            {
+                director.Stop();
+            }
+            cts?.Cancel();
+            cts?.Dispose();
+        }
 
+        /// <summary>
+        /// Called at the first state of bot to reset
+        /// </summary>
         public void Respawn()
         {
             capacity = Random.Range(1, 5);
@@ -76,18 +99,6 @@ namespace Entity
             }
         }
         
-        private void OnDestroy()
-        {
-            CheckAndDestroyMat();
-            
-            var director = GetComponent<PlayableDirector>();
-            if (director != null)
-            {
-                director.Stop();
-            }
-            cts?.Cancel();
-            cts?.Dispose();
-        }
 
         /// <summary>
         /// cached table and index for release position when done!
@@ -110,6 +121,11 @@ namespace Entity
             fruitTable.ReleasePosition(positionIndex);
         }
 
+        /// <summary>
+        /// Main method to control where bot go, and what to look at
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="lookPosition"></param>
         public void SetTarget(Vector3 position, Vector3 lookPosition)
         {
             TargetPosition = position;
@@ -117,15 +133,17 @@ namespace Entity
         }
 
         [SerializeField] private Cash cashPrefab;
-
-        private CancellationTokenSource cts;
         
+        /// <summary>
+        /// Put cash to the table
+        /// </summary>
+        /// <param name="c"></param>
         public async UniTask GiveCash(Cashier c)
         {
             for (int i = 0; i < MaxCapacity() * 3; i++)
             {
                 var cash = Instantiate(cashPrefab, modelTransform.position, Quaternion.identity);
-                cash.MoveTo(c.transform, c.GetCashPosition(i), onComplete: () =>
+                cash.MoveTo(c.transform, Cashier.GetCashPosition(i), onComplete: () =>
                 {
                     c.StoreCash(cash);
                 });
@@ -135,8 +153,12 @@ namespace Entity
             HasPay = true;
         }
         
-        [field : SerializeField] public bool HasPay {get; private set;}
+        [field : SerializeField] public bool HasPay {get; private set;} // for bot statemachine to check
         
+        /// <summary>
+        /// Fill fruit to box, play close animation, then move the box
+        /// </summary>
+        /// <param name="box"></param>
         public async UniTask FillBox(Box box)
         {
             if (fruits.Count == 0) return;
@@ -151,13 +173,14 @@ namespace Entity
                 await UniTask.Delay(100, cancellationToken: cts.Token);
             }
             
-            box.PlayAnimation();
+            box.PlayCloseAnimation();
             await UniTask.Delay(1000, cancellationToken: cts.Token);
             var localPosition = new Vector3(0, 0.8f, 1f);
             box.MoveTo(modelTransform, localPosition);
             TakeBox(box);
         }
 
+        // ======= Cached current box to destroy when reset bot =========================
         private Box currentBox = null;
         private void TakeBox(Box b)
         {

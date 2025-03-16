@@ -16,7 +16,7 @@ namespace Entity
         // How quickly the camera moves towards the target position.
         public float smoothSpeed = 0.125f;
 
-        void LateUpdate()
+        private void LateUpdate()
         {
             // Check if the target has been assigned.
             if (target == null)

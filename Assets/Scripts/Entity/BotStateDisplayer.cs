@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Entity
 {
+    /// <summary>
+    /// Other Mono attach to Bot game object for displaying visual
+    /// </summary>
     public class BotStateDisplayer : MonoBehaviour
     {
         [SerializeField] private Transform iconTransform;

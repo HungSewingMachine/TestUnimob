@@ -18,9 +18,13 @@ namespace Entity
         
         private Queue<BotController> objectQueue = new Queue<BotController>();
 
+        /// <summary>
+        /// Only process if character in range
+        /// </summary>
         private void Update()
         {
             if (!hasPlayer) return;
+            // auto check and process the queue
             if (state == CashierState.ProcessQueue)
             {
                 state = CashierState.Processing;
@@ -28,12 +32,15 @@ namespace Entity
             }
         }
 
-        public void Enqueue(BotController botController)
+        public void AddCustomerToQueue(BotController botController)
         {
+            // set position
             var positionIndex = objectQueue.Count;
             var targetPosition = GetQueuePosition(positionIndex);
             botController.SetTarget(targetPosition, 
                 positionIndex == 0 ? myTransform.position : targetPosition + 0.5f * Vector3.left);
+            
+            // check if there is need for box
             if (objectQueue.Count == 0)
             {
                 SpawnBox().Forget();
@@ -42,6 +49,9 @@ namespace Entity
             objectQueue.Enqueue(botController);
         }
 
+        /// <summary>
+        /// Spawn box and delay time for scale anim
+        /// </summary>
         private async UniTask SpawnBox()
         {
             currentBox = Instantiate(boxPrefab);
@@ -69,7 +79,7 @@ namespace Entity
         }
 
         /// <summary>
-        /// 
+        /// If there no one -> wait a frame else wait bot to close, fill box, then give cash, dequeue then rearrange customer queue
         /// </summary>
         private async UniTaskVoid ProcessQueue()
         {
@@ -80,7 +90,7 @@ namespace Entity
                 return;
             }
 
-            var bot = objectQueue.Dequeue();
+            var bot = objectQueue.Peek();
             
             // Wait until bot at top line
             await UniTask.WaitUntil(() => Vector3.Distance(bot.transform.position, GetQueuePosition(0)) <= 0.8f);
@@ -88,6 +98,7 @@ namespace Entity
             await bot.GiveCash(this);
             
             // Update line
+            objectQueue.Dequeue();
             int index = 0;
             foreach (var obj in objectQueue)
             {
@@ -116,7 +127,7 @@ namespace Entity
             cashes.Push(cash);
         }
         
-        public Vector3 GetCashPosition(int index)
+        public static Vector3 GetCashPosition(int index)
         {
             var heightIndex = index / 8;
             var colIndex = index % 4;
@@ -124,17 +135,22 @@ namespace Entity
             return new Vector3( -1 - colIndex * 0.25f, 0.5f + 0.1f * heightIndex, -0.38f + rowIndex * 0.52f);
         }
 
+        // time that cashier wait each time it check
         protected override float GetCooldownTime()
         {
             return 0.05f;
         }
         
-        protected override bool CanInteract()
+        protected override bool CanInteractWithPlayer()
         {
+            // can interact + has cash
             return interactionCounter <= 0f && cashes.Count > 0;
         }
         
-        protected override void Interact()
+        /// <summary>
+        /// Give player cash if have
+        /// </summary>
+        protected override void InteractPlayer()
         {
             var cash = cashes.Pop();
             character.TakeCash(cash);

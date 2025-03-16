@@ -26,13 +26,17 @@ namespace Entity
             return fruitPositions[index];
         }
 
+        /// <summary>
+        /// Called at init for anim
+        /// </summary>
+        /// <param name="scaleTime"></param>
         public void ScaleVisual(out float scaleTime)
         {
             myTransform.DOScale(Vector3.one, config.boxScaleTime).SetEase(Ease.OutBounce);
             scaleTime = config.boxScaleTime;
         }
-
-        public void PlayAnimation()
+        
+        public void PlayCloseAnimation()
         {
             animator.SetTrigger(IsClose);
         }

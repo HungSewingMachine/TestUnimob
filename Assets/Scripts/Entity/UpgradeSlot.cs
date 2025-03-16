@@ -22,12 +22,12 @@ namespace Entity
             return 0.1f;
         }
 
-        protected override bool CanInteract()
+        protected override bool CanInteractWithPlayer()
         {
             return character.CanBuy();
         }
 
-        protected override void Interact()
+        protected override void InteractPlayer()
         {
             character.SpendCash();
             upgradeCost -= 1;

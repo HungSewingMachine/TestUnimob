@@ -10,9 +10,9 @@ namespace Entity
 
         protected abstract float GetCooldownTime();
         
-        protected abstract bool CanInteract();
+        protected abstract bool CanInteractWithPlayer();
         
-        protected abstract void Interact();
+        protected abstract void InteractPlayer();
         
         private void OnTriggerStay(Collider other)
         {
@@ -25,9 +25,9 @@ namespace Entity
             }
 
             interactionCounter -= Time.deltaTime;
-            if (CanInteract())
+            if (CanInteractWithPlayer())
             {
-                Interact();
+                InteractPlayer();
                 interactionCounter = GetCooldownTime();
             }
         }

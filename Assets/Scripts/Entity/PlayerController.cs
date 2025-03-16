@@ -8,7 +8,8 @@ namespace Entity
     {
         [SerializeField] private Joystick joystick;
         [SerializeField] private Transform cameraTransform;
-
+        [SerializeField] protected PlayerData playerData;
+        
         protected override void Start()
         {
             base.Start();
@@ -42,12 +43,12 @@ namespace Entity
             return forward * input.y + right * input.x;
         }
 
+        
+        // Handle player data
         public bool CanBuy()
         {
             return playerData.numberOfCash > 0;
         }
-
-        [SerializeField] protected PlayerData playerData;
         
         public void TakeCash(ITransfer transfer)
         {
