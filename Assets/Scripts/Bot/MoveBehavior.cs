@@ -24,6 +24,7 @@ public class MoveBehavior : FSMC_Behaviour
         bot = executer.GetComponent<BotController>();
         myTransform = executer.transform;
         
+        bot.Respawn();
         bot.RegisterTable(fruitTable);
     }
 

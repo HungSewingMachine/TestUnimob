@@ -1,10 +1,17 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Playables;
+using Random = UnityEngine.Random;
 
 namespace Entity
 {
     public class BotController : Character
     {
+        [SerializeField] private Renderer renderer;
+        [SerializeField] private Material[] materials;
+        
         [field : SerializeField] public Vector3 TargetPosition { get; private set; }
         
         private Table fruitTable;
@@ -30,8 +37,39 @@ namespace Entity
         protected override void Start()
         {
             base.Start();
+            Initialize();
+        }
 
+        public void Initialize()
+        {
+            cts = new CancellationTokenSource();
             capacity = Random.Range(1, 5);
+            
+            //renderer.material = materials[Random.Range(0, materials.Length)];
+        }
+
+        public void Respawn()
+        {
+            var randomOffset = Random.insideUnitCircle * 5;
+            var pos = new Vector3( -24 + randomOffset.x, 0, -6 + randomOffset.y);
+            SetPosition(pos);
+            DestroyBox();
+        }
+
+        private void OnDestroy()
+        {
+            // if (renderer.material != null)
+            // {
+            //     Destroy(renderer.material);
+            // }
+            
+            var director = GetComponent<PlayableDirector>();
+            if (director != null)
+            {
+                director.Stop();
+            }
+            cts?.Cancel();
+            cts?.Dispose();
         }
 
         /// <summary>
@@ -62,6 +100,8 @@ namespace Entity
 
         [SerializeField] private Cash cashPrefab;
 
+        private CancellationTokenSource cts;
+        
         private async UniTask GiveCash()
         {
             var cashier = FindObjectOfType<Cashier>();
@@ -71,7 +111,7 @@ namespace Entity
                 var cash = Instantiate(cashPrefab, modelTransform.position, Quaternion.identity);
                 cash.MoveTo(cashier.transform, cashier.GetCashPosition(i));
                 cashier.StoreCash(cash);
-                await UniTask.Delay(100);
+                await UniTask.Delay(100, cancellationToken: cts.Token);
             }
 
             HasPay = true;
@@ -93,12 +133,28 @@ namespace Entity
             }
             
             box.PlayAnimation();
-            await UniTask.Delay(1000);
+            await UniTask.Delay(1000, cancellationToken: cts.Token);
             var localPosition = new Vector3(0, 0.8f, 1f);
             box.MoveTo(modelTransform, localPosition);
-            hasBox = true;
+            TakeBox(box);
             
             await GiveCash();
+        }
+
+        private Box currentBox = null;
+        private void TakeBox(Box b)
+        {
+            hasBox = true;
+            currentBox = b;
+        }
+
+        private void DestroyBox()
+        {
+            if (hasBox)
+            {
+                Destroy(currentBox.gameObject);
+                hasBox = false;
+            }
         }
     }
 }

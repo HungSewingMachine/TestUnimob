@@ -839,9 +839,16 @@ MonoBehaviour:
   characterController: {fileID: 2532612452022550196}
   animator: {fileID: 4038326093781871321}
   numberOfCash: 0
+  renderer: {fileID: 8086147347910470713}
+  materials:
+  - {fileID: 2100000, guid: 1256763a8ce30451796f38d39589b483, type: 2}
+  - {fileID: 2100000, guid: 558a80772286b43378c82201b7715070, type: 2}
+  - {fileID: 2100000, guid: cc56b86b1247a4d4d95ee88b1065dd2b, type: 2}
+  - {fileID: 2100000, guid: e1a36970ba82b48efaf2f624a3401a99, type: 2}
   <TargetPosition>k__BackingField: {x: 0, y: 0, z: 0}
   capacity: 0
   cashPrefab: {fileID: 4766692383668683904, guid: 641de12569bc53145b07ccabdafe9d46, type: 3}
+  <HasPay>k__BackingField: 0
 --- !u!1 &6024680700184512540
 GameObject:
   m_ObjectHideFlags: 0

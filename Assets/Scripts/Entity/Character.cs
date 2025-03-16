@@ -62,6 +62,13 @@ namespace Entity
             }
         }
 
+        protected void SetPosition(Vector3 position)
+        {
+            characterController.enabled = false; // Disable CharacterController to modify position
+            transform.position = position;    // Set new position
+            characterController.enabled = true;
+        }
+
         protected abstract Vector3 ProcessInput();
 
         protected abstract int MaxCapacity();
