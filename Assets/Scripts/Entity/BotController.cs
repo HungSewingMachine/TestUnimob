@@ -15,6 +15,7 @@ namespace Entity
         [SerializeField] private Material[] materials;
         
         [field : SerializeField] public Vector3 TargetPosition { get; private set; }
+        [field : SerializeField] public Vector3 LookPosition { get; private set; }
         
         private Table fruitTable;
         private int positionIndex;
@@ -23,9 +24,16 @@ namespace Entity
         protected override Vector3 ProcessInput()
         {
             var dir = TargetPosition - modelTransform.position;
-            if (dir.magnitude > 0.5f)
+            if (dir.magnitude > .8f)
             {
                 return dir.normalized;
+            }
+            
+            // if target is close, change input to focus on target
+            if (dir.magnitude > 0.5f)
+            {
+                TargetPosition = modelTransform.position + (LookPosition - modelTransform.position).normalized * 0.5f;
+                return (TargetPosition - modelTransform.position).normalized;
             }
 
             return Vector3.zero;
@@ -45,25 +53,32 @@ namespace Entity
         public void Initialize()
         {
             cts = new CancellationTokenSource();
-            capacity = Random.Range(1, 5);
-            
-            //renderer.material = materials[Random.Range(0, materials.Length)];
         }
 
         public void Respawn()
         {
+            capacity = Random.Range(1, 5);
+
+            CheckAndDestroyMat();
+            botRenderer.material = materials[Random.Range(0, materials.Length)];
+            
             var randomOffset = Random.insideUnitCircle * 5;
             var pos = new Vector3( -24 + randomOffset.x, 0, -6 + randomOffset.y);
             SetPosition(pos);
             DestroyBox();
         }
 
+        private void CheckAndDestroyMat()
+        {
+            if (botRenderer.material != null)
+            {
+                Destroy(botRenderer.material);
+            }
+        }
+        
         private void OnDestroy()
         {
-            // if (renderer.material != null)
-            // {
-            //     Destroy(renderer.material);
-            // }
+            CheckAndDestroyMat();
             
             var director = GetComponent<PlayableDirector>();
             if (director != null)
@@ -78,10 +93,10 @@ namespace Entity
         /// cached table and index for release position when done!
         /// </summary>
         /// <param name="table"></param>
-        public void RegisterTable(Table table)
+        public void RegisterTablePosition(Table table)
         {
             var pos = table.GetPosition(out var idx);
-            SetTarget(pos);
+            SetTarget(pos, table.transform.position);
             
             fruitTable = table;
             positionIndex = idx;
@@ -95,9 +110,10 @@ namespace Entity
             fruitTable.ReleasePosition(positionIndex);
         }
 
-        public void SetTarget(Vector3 position)
+        public void SetTarget(Vector3 position, Vector3 lookPosition)
         {
             TargetPosition = position;
+            LookPosition = lookPosition;
         }
 
         [SerializeField] private Cash cashPrefab;
@@ -132,7 +148,7 @@ namespace Entity
                 var f = fruits.Pop();
                 f.MoveTo(boxTransform, box.GetFruitPosition(counter));
                 counter++;
-                await UniTask.Delay(250, cancellationToken: cts.Token);
+                await UniTask.Delay(100, cancellationToken: cts.Token);
             }
             
             box.PlayAnimation();

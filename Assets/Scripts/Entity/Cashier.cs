@@ -31,12 +31,14 @@ namespace Entity
         public void Enqueue(BotController botController)
         {
             var positionIndex = objectQueue.Count;
-            botController.SetTarget(GetQueuePosition(positionIndex));
-
+            var targetPosition = GetQueuePosition(positionIndex);
+            botController.SetTarget(targetPosition, 
+                positionIndex == 0 ? myTransform.position : targetPosition + 0.5f * Vector3.left);
             if (objectQueue.Count == 0)
             {
                 SpawnBox().Forget();
             }
+
             objectQueue.Enqueue(botController);
         }
 
@@ -88,7 +90,8 @@ namespace Entity
             foreach (var obj in objectQueue)
             {
                 var pos = GetQueuePosition(index);
-                obj.SetTarget(pos);
+                var lookPosition = index == 0 ? myTransform.position : pos + 0.5f * Vector3.left;
+                obj.SetTarget(pos,lookPosition);
                 index++;
             }
 

@@ -18,7 +18,9 @@ public class GoToQueueBehavior : FSMC_Behaviour
     public override void OnStateEnter(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
         bot = executer.GetComponent<BotController>();
-        Object.FindObjectOfType<Cashier>().Enqueue(bot);
+        var cashier = Object.FindObjectOfType<Cashier>();
+        
+        cashier.Enqueue(bot);
     }
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
@@ -31,6 +33,7 @@ public class GoToQueueBehavior : FSMC_Behaviour
 
     public override void OnStateExit(FSMC_Controller stateMachine, FSMC_Executer executer)
     {
-        bot.SetTarget(new Vector3(-10, 0, 0));
+        var target = GameConstant.SpawnPosition;
+        bot.SetTarget(target, target);
     }
 }

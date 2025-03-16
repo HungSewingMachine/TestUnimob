@@ -25,7 +25,7 @@ public class MoveBehavior : FSMC_Behaviour
         myTransform = executer.transform;
         
         bot.Respawn();
-        bot.RegisterTable(fruitTable);
+        bot.RegisterTablePosition(fruitTable);
     }
 
     public override void OnStateUpdate(FSMC_Controller stateMachine, FSMC_Executer executer)
