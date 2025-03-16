@@ -43,7 +43,7 @@ namespace Entity
             
             var s = DOTween.Sequence();
             s.Append(myTransform.DOLocalMove(position, .5f));
-            s.Join(myTransform.DOLocalRotate(new Vector3(0, 359, 0), .5f, RotateMode.FastBeyond360));
+            s.Join(myTransform.DORotate(new Vector3(0, 359, 0), .5f, RotateMode.FastBeyond360));
             if (onComplete != null)
             {
                 s.OnComplete(() => onComplete());
