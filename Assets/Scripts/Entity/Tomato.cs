@@ -8,11 +8,10 @@ namespace Entity
     {
         [SerializeField] private Transform myTransform;
         
-        public void MoveTo(Transform parent, Vector3 position, bool destroyedAtEnd = false)
+        public void MoveTo(Transform parent, Vector3 position, bool destroyedAtEnd = false, System.Action onComplete = null)
         {
             myTransform.SetParent(parent);
-            myTransform.DOLocalMove(position, 0.2f);
-            //myTransform.localPosition = position;
+            myTransform.DOLocalMove(position, 0.2f).OnComplete(() => onComplete?.Invoke());
         }
     }
 }

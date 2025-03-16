@@ -92,7 +92,7 @@ namespace Entity
         /// </summary>
         public void UnregisterTable()
         {
-            fruitTable.ReleasePosition(positionIndex, this);
+            fruitTable.ReleasePosition(positionIndex);
         }
 
         public void SetTarget(Vector3 position)
@@ -104,15 +104,15 @@ namespace Entity
 
         private CancellationTokenSource cts;
         
-        private async UniTask GiveCash()
+        public async UniTask GiveCash(Cashier c)
         {
-            var cashier = FindObjectOfType<Cashier>();
-            
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < MaxCapacity() * 3; i++)
             {
                 var cash = Instantiate(cashPrefab, modelTransform.position, Quaternion.identity);
-                cash.MoveTo(cashier.transform, cashier.GetCashPosition(i));
-                cashier.StoreCash(cash);
+                cash.MoveTo(c.transform, c.GetCashPosition(i), onComplete: () =>
+                {
+                    c.StoreCash(cash);
+                });
                 await UniTask.Delay(100, cancellationToken: cts.Token);
             }
 
@@ -121,7 +121,7 @@ namespace Entity
         
         [field : SerializeField] public bool HasPay {get; private set;}
         
-        public async UniTask FillBoxThenGiveCash(Box box)
+        public async UniTask FillBox(Box box)
         {
             if (fruits.Count == 0) return;
             
@@ -132,6 +132,7 @@ namespace Entity
                 var f = fruits.Pop();
                 f.MoveTo(boxTransform, box.GetFruitPosition(counter));
                 counter++;
+                await UniTask.Delay(250, cancellationToken: cts.Token);
             }
             
             box.PlayAnimation();
@@ -139,8 +140,6 @@ namespace Entity
             var localPosition = new Vector3(0, 0.8f, 1f);
             box.MoveTo(modelTransform, localPosition);
             TakeBox(box);
-            
-            await GiveCash();
         }
 
         private Box currentBox = null;

@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda4f8873377467d8112155ab58f54b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: b64a6e50145ba1d44ade1e4494e3cc6c, type: 2}
   myTransform: {fileID: 4807698484616539890}
   animator: {fileID: 8431312840510882377}
 --- !u!1001 &8469527624664281018

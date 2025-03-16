@@ -1,4 +1,5 @@
 ﻿using System;
+using Data;
 using DG.Tweening;
 using Interface;
 using UnityEngine;
@@ -7,6 +8,7 @@ namespace Entity
 {
     public class Box : MonoBehaviour, ITransfer
     {
+        [SerializeField] private GameConfig config;
         [SerializeField] private Transform myTransform;
         [SerializeField] private Animator animator;
         
@@ -24,9 +26,10 @@ namespace Entity
             return fruitPositions[index];
         }
 
-        public void Init()
+        public void ScaleVisual(out float scaleTime)
         {
-            myTransform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBounce);
+            myTransform.DOScale(Vector3.one, config.boxScaleTime).SetEase(Ease.OutBounce);
+            scaleTime = config.boxScaleTime;
         }
 
         public void PlayAnimation()
@@ -34,13 +37,17 @@ namespace Entity
             animator.SetTrigger(IsClose);
         }
         
-        public void MoveTo(Transform parent, Vector3 position, bool destroyedAtEnd = false)
+        public void MoveTo(Transform parent, Vector3 position, bool destroyedAtEnd = false, Action onComplete = null)
         {
             myTransform.SetParent(parent);
             
             var s = DOTween.Sequence();
             s.Append(myTransform.DOLocalMove(position, .5f));
             s.Join(myTransform.DOLocalRotate(new Vector3(0, 359, 0), .5f, RotateMode.FastBeyond360));
+            if (onComplete != null)
+            {
+                s.OnComplete(() => onComplete());
+            }
         }
     }
 }

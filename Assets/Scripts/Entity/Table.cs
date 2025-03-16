@@ -16,8 +16,6 @@ namespace Entity
         public float interactionCounter;
         private ICharacter character;
         
-        public int NumberOfFruits => fruits.Count;
-        
         private void OnTriggerStay(Collider other)
         {
             if (!other.CompareTag("Player")) return;
@@ -33,8 +31,10 @@ namespace Entity
             {
                 var fruit = character.RemoveFruits();
                 var index = fruits.Count;
-                fruit.MoveTo(transform, GetFruitLocalPosition(index));
-                fruits.Push(fruit);
+                fruit.MoveTo(transform, GetFruitLocalPosition(index), onComplete: () =>
+                {
+                    fruits.Push(fruit);
+                });
                 interactionCounter = INTERACTION_TIME;
             }
         }
@@ -51,7 +51,7 @@ namespace Entity
         {
             var row = index % 5;
             var column = index / 5;
-            return new Vector3(-0.9f + row * .45f, 0.3f + column * 0.3f, -0.6f + column * 0.6f);
+            return new Vector3(-0.9f + row * .45f, 0.8f + column * 0.3f, -0.6f + column * 0.6f);
         }
         
         
@@ -76,17 +76,13 @@ namespace Entity
             return Vector3.zero; 
         }
 
-        public void ReleasePosition(int index, ICharacter c)
+        public void ReleasePosition(int index)
         {
-            occupied[index] = false; 
-            if (waitClients.Contains(c))
-            {
-                waitClients.Remove(c);
-            }
+            occupied[index] = false;
         }
 
         private float waitCounter = 0f;
-        private List<ICharacter> waitClients = new List<ICharacter>();
+        private Queue<ICharacter> waitClients = new Queue<ICharacter>();
         
         /// <summary>
         /// Add bot to fill list to handle
@@ -96,7 +92,7 @@ namespace Entity
         {
             if (!waitClients.Contains(c))
             {
-                waitClients.Add(c);
+                waitClients.Enqueue(c);
             }
         }
 
@@ -105,18 +101,24 @@ namespace Entity
             waitCounter -= Time.deltaTime;
             if (waitCounter <= 0f)
             {
-                for (int i = 0; i < waitClients.Count; i++)
-                {
-                    var tableHasFruit = fruits.Count > 0;
-                    if (!tableHasFruit) break;
-                    
-                    if (waitClients[i].CanCarry())
-                    {
-                        var fruit = fruits.Pop();
-                        waitClients[i].TakeFruits(fruit);
-                    }
-                }
+                GiveCustomerFruits();
                 waitCounter = INTERACTION_TIME;
+            }
+        }
+
+        private void GiveCustomerFruits()
+        {
+            while (fruits.Count > 0 && waitClients.Count > 0)
+            {
+                ICharacter c = waitClients.Dequeue();
+                if (!c.CanCarry()) continue;
+                    
+                var fruit = fruits.Pop();
+                c.TakeFruits(fruit);
+                if (c.CanCarry())
+                {
+                    waitClients.Enqueue(c);
+                }
             }
         }
     }

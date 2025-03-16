@@ -67,8 +67,12 @@ namespace Entity
         private void GenerateFruit()
         {
             var positionIndex = fruits.Count % MAX_FRUIT;
-            var tomato = Instantiate(tomatoPrefab, myTransform.position + spawnPoints[positionIndex], Quaternion.identity, myTransform);
-            fruits.Enqueue(tomato);
+            var groundPosition = myTransform.position + spawnPoints[positionIndex] + Vector3.down;
+            var tomato = Instantiate(tomatoPrefab, groundPosition, Quaternion.identity, myTransform);
+            tomato.MoveTo(myTransform, spawnPoints[positionIndex], onComplete: () =>
+            {
+                fruits.Enqueue(tomato);
+            });
         }
 
         private ICharacter character;

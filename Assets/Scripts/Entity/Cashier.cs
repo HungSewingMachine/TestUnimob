@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Interface;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Entity
@@ -15,7 +13,7 @@ namespace Entity
     
     public class Cashier : InteractBase
     {
-        [SerializeField] private CashierState state;
+        [SerializeField] private CashierState state = CashierState.ProcessQueue;
         [SerializeField] private Transform myTransform;
         
         private Queue<BotController> objectQueue = new Queue<BotController>();
@@ -37,15 +35,16 @@ namespace Entity
 
             if (objectQueue.Count == 0)
             {
-                SpawnBox();
+                SpawnBox().Forget();
             }
             objectQueue.Enqueue(botController);
         }
 
-        private void SpawnBox()
+        private async UniTask SpawnBox()
         {
             currentBox = Instantiate(boxPrefab);
-            currentBox.Init();
+            currentBox.ScaleVisual(out var scaleTime);
+            await UniTask.Delay(TimeSpan.FromSeconds(scaleTime));
         }
 
         private Vector3 GetQueuePosition(int index)
@@ -57,7 +56,6 @@ namespace Entity
         private void OnTriggerEnter(Collider other)
         {
             if (!other.CompareTag("Player")) return;
-            state = CashierState.ProcessQueue;
             hasPlayer = true;
         }
 
@@ -82,8 +80,10 @@ namespace Entity
 
             var bot = objectQueue.Dequeue();
             
-            await bot.FillBoxThenGiveCash(currentBox);
+            await bot.FillBox(currentBox);
+            await bot.GiveCash(this);
             
+            // Update line
             int index = 0;
             foreach (var obj in objectQueue)
             {
@@ -95,7 +95,7 @@ namespace Entity
             var isBotRemain = objectQueue.Count != 0;
             if (isBotRemain)
             {
-                SpawnBox();
+                await SpawnBox();
             }
 
             state = CashierState.ProcessQueue;

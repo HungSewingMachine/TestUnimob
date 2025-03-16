@@ -8,14 +8,18 @@ namespace Entity
     {
         [SerializeField] private Transform cashTransform;
         
-        public void MoveTo(Transform parent, Vector3 position, bool destroyedAtEnd = false)
+        public void MoveTo(Transform parent, Vector3 position, bool destroyedAtEnd = false, System.Action onComplete = null)
         {
             //cashTransform.SetParent(parent);
             var tween = cashTransform.DOMove(parent.position + position, 0.2f);
-            if (destroyedAtEnd)
+            tween.OnComplete(() =>
             {
-                tween.OnComplete(DestroyGameObject);
-            }
+                onComplete?.Invoke();
+                if (destroyedAtEnd)
+                {
+                    DestroyGameObject();
+                }
+            });
         }
 
         private void DestroyGameObject()
