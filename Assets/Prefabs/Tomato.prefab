@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d60f0e69b043ad24ba4d8a4fdc012115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: b64a6e50145ba1d44ade1e4494e3cc6c, type: 2}
   myTransform: {fileID: 6418028752067536493}
 --- !u!1001 &3237277545524316076
 PrefabInstance:

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Data;
 using Interface;
 using UnityEngine;
 
@@ -6,10 +7,10 @@ namespace Entity
 {
     public class Table : MonoBehaviour
     {
+        [SerializeField] private GameConfig config;
         [SerializeField] private Transform tableTransform;
         
         public const int MAX_CAPACITY = 15;
-        public const float INTERACTION_TIME = 0.15F;
         
         private Stack<ITransfer> fruits = new Stack<ITransfer>(MAX_CAPACITY);
         
@@ -34,7 +35,7 @@ namespace Entity
                 var index = fruits.Count;
                 fruits.Push(fruit);
                 fruit.MoveTo(transform, GetFruitLocalPosition(index));
-                interactionCounter = INTERACTION_TIME;
+                interactionCounter = config.fruitMoveTime + 0.01f;
             }
         }
         
@@ -42,7 +43,7 @@ namespace Entity
         {
             if (!other.CompareTag("Player")) return;
             
-            interactionCounter = INTERACTION_TIME;
+            interactionCounter = config.fruitMoveTime + 0.01f;
             character = null;
         }
 
@@ -52,7 +53,6 @@ namespace Entity
             var column = index / 5;
             return new Vector3(-0.9f + row * .45f, 0.8f + column * 0.3f, -0.6f + column * 0.6f);
         }
-        
         
         //================================================================
         
@@ -101,7 +101,7 @@ namespace Entity
             if (waitCounter <= 0f)
             {
                 GiveCustomerFruits();
-                waitCounter = INTERACTION_TIME;
+                waitCounter = config.fruitMoveTime + 0.01f;
             }
         }
 

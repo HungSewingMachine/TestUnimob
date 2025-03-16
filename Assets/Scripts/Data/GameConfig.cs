@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Data
 {
@@ -6,7 +7,7 @@ namespace Data
     public class GameConfig : ScriptableObject
     {
         public float tomatoTreeGrowTime = 1f;
-        public float tomatoMoveTime = 0.5f;
+        public float fruitMoveTime = 0.2f;
         public float boxScaleTime = 0.3f;
     }
 }
