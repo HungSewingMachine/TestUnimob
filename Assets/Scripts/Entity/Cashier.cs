@@ -82,6 +82,8 @@ namespace Entity
 
             var bot = objectQueue.Dequeue();
             
+            // Wait until bot at top line
+            await UniTask.WaitUntil(() => Vector3.Distance(bot.transform.position, GetQueuePosition(0)) <= 0.8f);
             await bot.FillBox(currentBox);
             await bot.GiveCash(this);
             
